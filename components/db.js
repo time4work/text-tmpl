@@ -1,10 +1,11 @@
 const MongoClient = require('mongodb').MongoClient;
+const logger = require('./logger');
 const db_conf = require('../config/db');
 
 
 const dbManager = class {
 	constructor(){
-		console.log('dbManager constructor');
+		logger.info('[ dbManager constructor ]');
 	}
 	getDB(callback){
 		MongoClient.connect(db_conf.url, async (err, client) => {
@@ -12,7 +13,7 @@ const dbManager = class {
 				console.log(err);
 				process.exit(1);
 			}else{
-				console.log('db getDB');
+				logger.info('[ db getDB ]');
 				var db = await client.db(db_conf.name);
 				await callback(db);
 				return client.close();
@@ -25,7 +26,7 @@ const dbManager = class {
 				console.log(err);
 				process.exit(1);
 			}else{
-				console.log('db getCollection');
+				logger.info('[ db getCollection ]');
 				var db = await client.db(db_conf.name);
 				await callback( db.collection(colname) );
 				return client.close();
@@ -38,7 +39,7 @@ const dbManager = class {
 				console.log(err);
 				process.exit(1);
 			}else{
-				console.log('db insertOne');
+				logger.info('[ db insertOne ]');
 				var db = await client.db(db_conf.name);
 				await db.collection(colname).insertOne(obj, function(err, r) {
 					callback(err, r);
@@ -53,7 +54,7 @@ const dbManager = class {
 				console.log(err);
 				process.exit(1);
 			}else{
-				console.log('db insertMany');
+				logger.info('[ db insertMany ]');
 				var db = await client.db(db_conf.name);
 				await db.collection(colname).insertMany(arr, function(err, r) {
 					callback(err, r);

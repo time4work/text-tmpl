@@ -12,6 +12,8 @@ Vue.config.productionTip = false
 
 require('../bower_components/components-font-awesome/css/fontawesome-all.css')
 
+// const tree = require('@/assets/js/tree').default;
+
 new Vue({
   el: '#app',
   router,

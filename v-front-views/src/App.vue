@@ -12,7 +12,7 @@ export default {
 
 <style lang="scss">
 	@import 'bower_components/bootstrap/scss/bootstrap.scss';
-	@import 'src/assets/scss/style.scss';
+  @import 'src/assets/scss/style.scss';
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
