@@ -27,23 +27,16 @@
 						<div class="form-check">
 							<input 
 								class='form-check-input'
-								id="radio100"
+								id="radio102"
 								type="radio" 
 								name="gen-type"
-								value='main-key'
+								value='unique-text'
 								required="ture"
 								v-model="typepicked">
 						    <label 
 						    	class="form-check-label" 
-						    	for="radio100">main key</label>
+						    	for="radio102">unique text</label>
 						</div>
-				    	<input 
-				    		class='form-control radio-input' 
-				    		type="text" 
-							required="ture"
-				    		name="main-key"
-							placeholder='focus_key'
-				    		v-if='typepicked == "main-key"'>
 						<div class="form-check">
 							<input 
 								class='form-check-input'
@@ -64,6 +57,26 @@
 							required="ture"
 							placeholder='focus_key'
 				    		v-if='typepicked == "unique-key"'>
+						<div class="form-check">
+							<input 
+								class='form-check-input'
+								id="radio100"
+								type="radio" 
+								name="gen-type"
+								value='main-key'
+								required="ture"
+								v-model="typepicked">
+						    <label 
+						    	class="form-check-label" 
+						    	for="radio100">main key</label>
+						</div>
+				    	<input 
+				    		class='form-control radio-input' 
+				    		type="text" 
+							required="ture"
+				    		name="main-key"
+							placeholder='focus_key'
+				    		v-if='typepicked == "main-key"'>
 						<hr>
 						<input
 							class='form-control' 
@@ -212,26 +225,40 @@ export default {
 						// event.target.value = '';
 						console.log(msg);
 
+						// clear console output
+						let output = vm.$el.querySelector('.console-show ul.output');
+						output.innerHTML = '';
+						// tree
+						var tmpl2 = vm.parseTmplObj(vm.keys);
+						console.log("tmpl2");
+						console.log(tmpl2);
+						let tree = vm.templateParse3(msg, tmpl2);
+						tree = "<div class='tree'>"+tree+"</div>";
+						console.log(tree);
+						//
+						var li4 = document.createElement('li');
+						li4.innerHTML = tree
+						output.append(li4);
+						// tree
+
+						// rand gen
 						var tmpl = vm.parseTmplObj(vm.keys);
-						console.log("tmpl.test_key2");
-						console.log(tmpl.test_key2);
-						console.log("tmpl.test_key2.length");
-						console.log(tmpl.test_key2.length);
 						let result = vm.templateParse2(msg, tmpl);
 						console.log(result);
-
-						let output = vm.$el.querySelector('.console-show ul.output');
-
+						//
+						// rand gen result
 						var li = document.createElement('li');
-						li.appendChild(document.createTextNode(' - result: '));
+						li.appendChild(document.createTextNode(' - randon result is : '));
 						output.append(li);
-
+						//
+						var li3 = document.createElement('li');
+						output.append(li3);
 						var li2 = document.createElement('li');
 						li2.appendChild(document.createTextNode(result));
 						output.append(li2);
 
-						var li3 = document.createElement('li');
-						output.append(li3);
+						var tmpl_console = vm.$el.querySelector('.console-show');
+						tmpl_console.scrollTop = tmpl_console.scrollHeight;
 					}
 				}, false);
 			});
@@ -330,7 +357,7 @@ export default {
 		templateParse2: function(e, obj){
 			var regexp = /<\w*>/ig;
 			let li = document.createElement('li');
-			li.appendChild(document.createTextNode(' - element:  '));
+			li.appendChild(document.createTextNode(' - step:  '));
 			li.appendChild(document.createTextNode(e));
 			this.$el.querySelector('.console-show ul.output')
 				.append( li );
@@ -371,50 +398,128 @@ export default {
 	            }
 	        }
 		},
-		// templateParse3: function(e, obj){
-		// 	var regexp = /<\w*>/ig;
-		// 	let li = document.createElement('li');
-		// 	li.appendChild(document.createTextNode(' - element:  '));
-		// 	li.appendChild(document.createTextNode(e));
-		// 	this.$el.querySelector('.console-show ul.output')
-		// 		.append( li );
+		templateParse3: function(e, obj){
+			console.log('obj');
+			console.log(obj);
+			var regexp = /<\w*>/ig;
+			var result = '';
 
-	 //        if ( Array.isArray(e) ){
-	 //            if(e.length == 0){
-	 //                return null;
-	 //            }
-	 //            else{
-	 //                let promis = null;
-	 //                do{
-	 //                    let min = 0,
-	 //                        max = e.length-1;
-	 //                    let rand = min + Math.floor(Math.random() * (max + 1 - min));
-	 //                    promis = this.templateParse2( e[rand], obj);
-	 //                    e.splice(rand,1);
-	 //                }while(!promis && e.length)
-	 //                if(!promis) return null;
-	 //                return promis;
-	 //            }
-	 //        }
-	 //        else{
-	 //            if( /<\w*>/i.test(e) ){
-	 //                let result = '';
-	 //                let last_pos = 0;
-	 //                let foo;
-	 //                while ( foo = regexp.exec(e)) {
-	 //                    result += e.substring(last_pos,foo.index);
+	        if ( Array.isArray(e) ){
+	        	result += '<div class="array">';
+	        		result += '<span>[ array ]</span>';
+	        	result += '</div>';
+
+        		result += '<div class="tr">';
+        		console.log(e);
+	            if(e.length == 0){
+	            	console.log('zero key array');
+	            }
+	            else{
+        			result += '<ul class="array">';
+	                for(var i=0;i<e.length;i++){
+	                	result += '<li class="item">';
+	                	result += this.templateParse3( e[i], obj);
+	                	result += '</li>';
+	                }
+        			result += '</ul>';
+	            }
+        		result += '</div>';
+                return result;
+	        }
+	        else{
+	            if( /<\w*>/i.test(e) ){
+		        	result += '<div class="content">';
+        				result += '<span>'
+							+ e.replace(/(<)+/g,'&#60;')
+	    						.replace(/(>)+/g,'&#62;')
+	    						+'</span>';
+		        	result += '</div>';
+		        	result += '<ul class="keys">';
+	                let last_pos = 0;
+	                let foo;
+	                while ( foo = regexp.exec(e)) {
+
 	                    
-	 //                    let ind = foo[0].replace(/[<>]*/g,'');
-	 //                    result += this.templateParse2( obj[ind], obj);
-	 //                    last_pos = regexp.lastIndex;
-	 //                }
-	 //                result += e.substring(last_pos,e.length);
-	 //                return result;
-	 //            }else{
-	 //                return e;
-	 //            }
-	 //        }
-		// }
+	                    let ind = foo[0].replace(/[<>]*/g,'');
+	        			result += '<li class="td">';
+
+				        	result += '<div class="key">';
+				        		result += '<span>key: '+ind+' </span>';
+				        	result += '</div>';
+
+				        	result += '<div class="value">';
+			                    result += this.templateParse3( obj[ind], obj);
+				        	result += '</div>';
+
+	        			result += '</li>';
+	                }
+		        	result += '</ul>';
+	                return result;
+	            }else{
+	                return e;
+	            }
+	        }
+		},
+		templateParse4: function(e, obj){
+			var regexp = /<\w*>/ig;
+			var result = '';
+
+	        if ( Array.isArray(e) ){
+	        	// result += '<div class="array">';
+	        	// 	result += '<span>[ array ]</span>';
+	        	// result += '</div>';
+
+        		// result += '<div class="tr">';
+        		console.log(e);
+	            if(e.length == 0){
+	            	console.log('zero key array');
+	            }
+	            else{
+        			// result += '<ul class="array">';
+	                for(var i=0;i<e.length;i++){
+	                	// result += '<li class="item">';
+	                	result += this.templateParse4( e[i], obj);
+	                	// result += '</li>';
+	                }
+        			// result += '</ul>';
+	            }
+        		// result += '</div>';
+                return result;
+	        }
+	        else{
+	            if( /<\w*>/i.test(e) ){
+		        	// result += '<div class="content">';
+        				// result += '<span>'
+							// + e.replace(/(<)+/g,'&#60;')
+	    						// .replace(/(>)+/g,'&#62;')
+	    						// +'</span>';
+		        	// result += '</div>';
+		        	// result += '<ul class="keys">';
+	                let last_pos = 0;
+	                let foo;
+	                while ( foo = regexp.exec(e)) {
+
+	                    
+	                    let ind = foo[0].replace(/[<>]*/g,'');
+	        			// result += '<li class="td">';
+
+				        	// result += '<div class="key">';
+				        		// result += '<span>key: '+ind+' </span>';
+				        	// result += '</div>';
+
+				        	// result += '<div class="value">';
+			                    result += this.templateParse4( obj[ind], obj);
+				        	// result += '</div>';
+
+ 	        			// result += '</li>';
+	                }
+		        	result += '</ul>';
+	                return result;
+	            }else{
+	                return e;
+	            }
+	        }
+		}
 	},
 	mounted: function(){
 		this.init();
